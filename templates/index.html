@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentinel</title>
+
+    <!--Leaflet API-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+    integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+     integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+     crossorigin=""></script>
+     <script src="{{url_for('static', filename='leaflet-heat.js')}}"></script>
+
+    <!--Jquery, Papaparse AP1-->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
+    
+   
+    <!--Sentinel Javascript and CSS Stylesheet, Daterangepicker stylesheet-->
+    <link rel="stylesheet" href="{{url_for('static', filename='Sentinel.css')}}">
+    
+</head>
+<body>
+    <script async src="{{url_for('static', filename='Sentinel.js')}}"></script>
+    <div id="POPUP_LAYER" class="POPUP_LAYER">
+        <form id="POPUP_FORM" class="POPUP_FORM" action="/addentry" method="POST">
+            <span class="FORM_CLOSE" id="FORM_CLOSE" onclick="closeform()">+</span>
+            <br>
+            <div id="FORMCONTAINER" class="FORMCONTAINER">
+                <fieldset id="KEYFACTS">
+                    <legend><b>Key Facts</b></legend>
+                    <label for="latlong">Location Coordinates</label>
+                    <input type="text" placeholder="Enter Coordinates" id="coordinates" name="locations" required>
+                    <br><br>
+                    <label for="address">Address</label>
+                    <input type="text" placeholder="Enter Address" id="addresses" name="addresses" required>
+                    <label for="zone">Zone</label>
+                    <select id="ZONES" name="zones" required>
+                        <option value="EAST">EAST</option>
+                        <option value="WEST">WEST</option>
+                        <option value="NORTH">NORTH</option>
+                        <option value="SOUTH">SOUTH</option>
+                        <option value="CENTRAL">CENTRAL</option>
+                    </select>
+                    <br><br>
+                    <label for="date">Date</label>
+                    <input type="date" placeholder="Enter Date" name="dates" required>
+                    <br><br>
+                    <label for="time">Time</label>
+                    <input type="time" placeholder="Enter Time" name="times" required>
+                    <br><br>
+                    <label for="sittype">Situation Type</label>
+                    <select id="SITTYPES" name="sittypes" required>
+                        <option value="-">-</option>
+                        <option value="ROAD ACCIDENT">ROAD ACCIDENT</option>
+                        <option value="POTHOLE">POTHOLE</option>
+                        <option value="FLOOD">FLOOD</option>
+                        <option value="FIRE">FIRE</option>
+                        <option value="TORNADO">TORNADO</option>
+                        <option value="POLICE RELATED">POLICE RELATED</option>
+                    </select>
+                    <br><br>
+                </fieldset>
+                <fieldset id="ADDITIONALFACTS">
+                    <legend><b>Additional Facts</b></legend>
+                    <label for="incidentnumbers">Incident Number</label>
+                    <input type="text" placeholder="Enter Incident Number" id="incidentnumbers" name="incidentnumbers">
+                    <br><br>
+                    <label for="brieffacts">Brief Facts</label>
+                    <br>
+                    <textarea id="BRIEFFACTS" name="brieffacts" rows="10" cols="40"></textarea>
+                    <br><br>
+                </fieldset>
+                <br>
+                <button type="submit">Create</button>
+            </div>
+        </form>
+    </div>
+    <form id="FILTERFORM" class="FILTERFORM" action="/filter" method="POST" style="top:35%; left:35%">
+        <span class="FORM_CLOSE" id="FORM_CLOSE" onclick="closefilterform()">+</span>
+        <br>
+        <div id="FILTERFORMCONTENT" style="margin:10px">
+            <div>Choose date and time ranges</div>
+            <br>
+            <div>
+                <label>Choose date range:</label>
+                <input type="date" placeholder="Choose start date" id="filterdatestart" name="filterdatestart">
+                -
+                <input type="date" placeholder="Choose end date" id="filterdateend" name="filterdateend">
+            </div>
+            <br>
+            <div>
+                <label>Choose time range:</label>
+                <input type="time" placeholder="Choose start time" id="filtertimestart" name="filtertimestart">
+                -
+                <input type="time" placeholder="Choose end time" id="filtertimeend" name="filtertimeend">
+            </div>
+            <br>
+            <legend>Choose the crimetypes:</legend>
+            <br>
+            <select placeholder="Choose situation types" id="filtersittype" name ="filtersittype" multiple>
+                <option value="-">-</option>
+                    <option value="ROAD ACCIDENT">ROAD ACCIDENT</option>
+                    <option value="POTHOLE">POTHOLE</option>
+                    <option value="FLOOD">FLOOD</option>
+                    <option value="FIRE">FIRE</option>
+                    <option value="TORNADO">TORNADO</option>
+                    <option value="POLICE RELATED">POLICE RELATED</option>
+            </select>
+            <button onclick="test()" type="submit">Filter Data</button>
+        </div>
+    </form>
+    <form id="INSERTFORM" class="INSERTFORM" action="/sendfile" method="POST" enctype="multipart/form-data">
+        <div id="INSERTFORMCONTAINER" style="margin:10px;">
+            <span class="FORM_CLOSE" id="FORM_CLOSE" onclick="closeinsertform()">+</span>
+            <br>
+            <input type="file" placeholder="Choose Excel File" id="fileinsert" name="fileinsert">
+            <br><br>
+            <button type="submit">Submit file</button>
+        </div>
+    </form>
+    <div id="FILTERCONTAINER" class="FILTERCONTAINER"></div>
+    <div id="MAINCONTAINER" class="MAINCONTAINER">
+        <div id="TOPBAR" class="TOPBAR">
+            <img class="LOGO" src="{{url_for('static',filename='Sentinellogo.png')}}" alt="SENTINEL">
+            <div id="BUTTONCONTAINER" class="BUTTONCONTAINER">
+                <button class="FILTERBUTTON" onclick="openfilterform()">Filter Data</button>
+                <button class="FILEBUTTON" onclick="openinsertform()">Insert Dataset</button>
+                <button class="CLEARDB" onclick="clearmap()" type="submit">Clear Map</button>
+            </div>
+        </div>
+        <div id="BODYCONTAINER" class="BODYCONTAINER">
+            <div id="SIDEBARCONTAINER" class="SIDEBARCONTAINER">
+                <div id="SIDEBARS" class="SIDEBAR">
+                    <div id="ADDCONTENT" class="ADDCONTENT">
+                        <button id="ADDBOX" class="BOX" onclick="openform()"> 
+                            <div class="BOX_CONTENT">+</div>
+                        </button>
+                    </div>
+                    <div id="SIDEBAR_CONTENTS" class="SIDEBAR_CONTENT">
+                        {% for row in data %}
+                        <button class="BOX" onclick="expand_data(this.id)" id={{row.id}}>
+                            <div>Location: {{row.addresses}}</div>
+                            <div>Date: {{row.dates}}  Time: {{row.times}}  Situation Type: {{row.sittypes}}</div>
+                        </button>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div id="main" class="MAPCONTAINER"> 
+                <div id="map" class="MAP"></div>
+            </div>
+            <div></div>
+        </div>
+        <script>
+        // ===================== REGARDING USER CREATED ENTTRIES ============================ //
+        // Function to create POP-UP FORM  
+        function openform(){
+        document.getElementById("POPUP_FORM").style.display = "block";
+        }
+
+        function closeform(){
+        document.getElementById("POPUP_FORM").style.display = "none";
+        }
+
+        function openfilterform(){
+        document.getElementById("FILTERFORM").style.display = "block";
+        document.getElementById("FILTERCONTAINER").style.display = "block";
+        }
+
+        function closefilterform(){
+        document.getElementById("FILTERFORM").style.display = "none";
+        document.getElementById("FILTERCONTAINER").style.display = "none";
+        }
+
+        function openinsertform(){
+        document.getElementById("INSERTFORM").style.display = "block";
+        document.getElementById("FILTERCONTAINER").style.display = "block";
+        }
+
+        function closeinsertform(){
+        document.getElementById("INSERTFORM").style.display = "none";
+        document.getElementById("FILTERCONTAINER").style.display = "none";
+        }
+    </script>
+</body>
+</html>

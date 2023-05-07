@@ -1,0 +1,206 @@
+.SIDEBAR{
+    width:450px;
+    height: 90vh;
+    position:absolute;
+    background-color:rgb(195, 194, 194);
+    margin:top right 10px
+}
+
+.SIDEBAR_CONTENT{
+    max-height:calc(100% - 130px);
+    overflow-y:auto;
+    margin:10px;
+    align-items:center;
+    text-align:center;
+}
+
+.ADDCONTENT{
+    margin:10px;
+    font-size:50px;
+    font-weight:10px;
+    align-items:center;
+    text-align:center;
+}
+
+.BOX{
+    background-color:rgb(73, 70, 70);
+    width: 400px;
+    opacity:0.5;
+    height:60px;
+    Z-INDEX:100;
+    margin:5px;
+    color:white;
+}
+
+.BOX:hover{
+    background-color:black;
+    width:400px;
+    opacity:0.5;
+    height:60px;
+    Z-INDEX:100;
+    margin:5px;
+    color:white; 
+}
+
+.BOX_CONTENT{
+    justify-content:center;
+    display:flex;
+    align-items:center;
+}
+
+.POPUP_CARD{
+    width:500px;
+    height:600px;
+    z-index:200;
+    position:absolute;
+    top:80px;
+    left:475px;
+    background-color:white;
+    border-color:gray;
+    border-width:5px;
+    border-style:solid;
+}
+
+.POPUPCARD_CONTAINER{
+    margin:10px;
+}
+
+.BRIEFFACTS{
+    overflow-y:auto;
+    border-width:2px;
+    border-color:gray;
+    height:200px;
+    width:400px;
+}
+
+.FORMCONTAINER{
+    margin:10px;
+}
+
+.POPUP_FORM{
+    width:500px;
+    height:620px;
+    z-index:200;
+    position:absolute;
+    top:60px;
+    background-color:white;
+    border-color:gray;
+    border-width:5px;
+    border-style:solid;
+    display:none;
+}
+
+.POPUP_LAYER{
+    top:0;
+    left:0;
+    position:absolute;
+    height:100%;
+    width:100%;
+}
+
+.FILTERFORM{
+    width:600px;
+    height:300px;
+    z-index:300;
+    position:absolute;
+    background-color:white;
+    border-color:gray;
+    border-width:5px;
+    border-style:solid;
+    display:none;
+}
+
+.FILTERCONTAINER{
+    align-items:center;
+    position:absolute;
+    height:100%;
+    width:100%;
+    z-index:200;
+    background-color:black;
+    opacity:0.4;
+    display:none;
+}
+
+.CLOSE{
+    font-size:45px;
+    font-weight:600;
+    display:inline-block;
+    transform:rotate(45deg);
+    left:180px;
+}
+
+.FORM_CLOSE{
+    font-size:45px;
+    font-weight:600;
+    display:inline-block;
+    transform:rotate(45deg);
+    left:180px;
+}
+
+.LOGO{
+    color:aliceblue; 
+    font-size:30px; 
+    padding:6px; 
+    font-family:'Segoe UI';
+    margin-left:40px;
+}
+
+.MAINCONTAINER{
+    top:0;
+    left:0;
+    display:grid;
+}
+
+.BODYCONTAINER{
+    display:flex;
+}
+
+.BUTTONCONTAINER{
+    flex:1;
+    margin:10px;
+    align-items:center;
+    vertical-align:middle;
+    text-align:right;
+}
+
+.TOPBAR{
+    display:flex;
+    flex-direction:row;
+    width:100%;
+    height:50px;
+    z-index:100;
+    position:sticky;
+    background-color:rgb(5, 39, 119);
+    top:0;
+    left:0;
+}
+
+.SIDEBARCONTAINER{
+    width:455px;
+    z-index:2;
+}
+
+.MAPCONTAINER{
+    flex:1;
+    padding:5px;
+    z-index:1;
+}
+
+.MAP{
+    flex:1;
+    height:90vh;
+}
+
+.INSERTFORM{
+    width:300px;
+    height:150px;
+    z-index:300;
+    top:45%;
+    left:45%;
+    position:absolute;
+    background-color:white;
+    border-color:gray;
+    border-width:5px;
+    border-style:solid;
+    display:none;
+}
